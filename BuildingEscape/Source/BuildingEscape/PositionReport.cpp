@@ -21,9 +21,15 @@ void UPositionReport::BeginPlay()
 	Super::BeginPlay();
 
     FString ObjectName = GetOwner()->GetName();
+    float ObjectXPos = GetOwner()->GetActorLocation().X;
+    float ObjectYPos = GetOwner()->GetActorLocation().Y;
+    float ObjectZPos = GetOwner()->GetActorLocation().Z;
+    // FString ObjectPos = GetOwner()->GetTransform().GetLocation().ToString();
+    FString ObjectPos = GetOwner()->GetActorLocation().ToString();
 
-    UE_LOG(LogTemp, Warning, TEXT("Position report for %s"), *ObjectName);
-	
+    //UE_LOG(LogTemp, Warning, TEXT("%s is at (%.2f, %.2f, %.2f)"), *ObjectName, ObjectXPos, ObjectYPos, ObjectZPos);
+    UE_LOG(LogTemp, Warning, TEXT("%s is at %s"), *ObjectName, *ObjectPos);
+
 }
 
 
