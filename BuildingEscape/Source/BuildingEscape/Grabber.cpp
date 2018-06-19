@@ -19,6 +19,26 @@ void UGrabber::BeginPlay()
 	Super::BeginPlay();
 
     UE_LOG(LogTemp, Warning, TEXT("Grabber reporting for duty"));
+
+    // Look for attached Physics Handle
+    PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+    if (PhysicsHandle) {
+        // Phusics Handle is found
+        UE_LOG(LogTemp, Warning, TEXT("Physics Component Found"));
+    }
+    else {
+        UE_LOG(LogTemp, Error, TEXT("%s missing PhysicsHandle component"), *(GetOwner()->GetName()));
+    }
+    InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
+    if (InputComponent) {
+        UE_LOG(LogTemp, Warning, TEXT("Input Component Found"));
+        // Bind the input axis
+        InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+        InputComponent->BindAction("Release", IE_Released, this, &UGrabber::Release);
+    }
+    else {
+        UE_LOG(LogTemp, Error, TEXT("%s missing InputComponent component"), *(GetOwner()->GetName()));
+    }
 }
 
 
@@ -34,7 +54,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
         OUT PlayerViewPointLocation, 
         OUT PlayerViewPointRotation
     );
-    UE_LOG(LogTemp, Warning, TEXT("Location: (%s), Rotation: (%s)"), *(PlayerViewPointLocation.ToString()), *(PlayerViewPointRotation.GetNormalized().ToString()));
+    //UE_LOG(LogTemp, Warning, TEXT("Location: (%s), Rotation: (%s)"), *(PlayerViewPointLocation.ToString()), *(PlayerViewPointRotation.GetNormalized().ToString()));
     //UE_LOG(LogTemp, Warning, TEXT("VECTOR: (%s)"), *(PlayerViewPointRotation.GetNormalized().Vector().ToString()));
     // ray-cast out to reach distance
     FVector LineTraceEnd = PlayerViewPointLocation + PlayerViewPointRotation.GetNormalized().Vector() * Reach;
@@ -54,3 +74,9 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
     // press f to pay respect
 }
 
+void UGrabber::Grab() {
+    UE_LOG(LogTemp, Warning, TEXT("Grab Pressed!"));
+}
+void UGrabber::Release() {
+    UE_LOG(LogTemp, Warning, TEXT("Release unpressed!"));
+}
